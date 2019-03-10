@@ -22,11 +22,11 @@ public class LivesComponent : MonoBehaviour
             }
         }
     }
-    [SerializeField]
     private Animator _animator;
 
     void Start()
     {
+        _animator = GetComponent<Animator>();
         Lives = _livesCount;
     }
 
@@ -41,5 +41,13 @@ public class LivesComponent : MonoBehaviour
     private void Death()
     {
         _animator?.Play("Death");
+    }
+
+    /// <summary>
+    /// Called by animation event.
+    /// </summary>
+    private void DestroyGameobject()
+    {
+        Destroy(gameObject);
     }
 }

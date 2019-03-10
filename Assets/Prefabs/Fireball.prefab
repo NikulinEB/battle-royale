@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 212034007117141668}
   - component: {fileID: 58152121139794556}
   - component: {fileID: 3559990160695732353}
-  m_Layer: 0
+  - component: {fileID: 7525907832249649341}
+  m_Layer: 9
   m_Name: Fireball
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -69,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: d7602b5e04745f74b8a23ea2ecaf9550, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -110,3 +111,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 0.05
+--- !u!114 &7525907832249649341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1877740161113332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e07dbbb548b7c4fa134f909c4da7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _delay: 2

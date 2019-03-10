@@ -33,8 +33,10 @@ public class CameraOnTarget : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        transform.position =  new Vector3(target.position.x - offset.x, target.position.y - offset.y, startPosition.z);
-
+        if (target)
+        {
+            transform.position = new Vector3(target.position.x - offset.x, target.position.y - offset.y, startPosition.z);
+        }
         //if (shouldMove)
         //{
         //    if (TargetReached())
