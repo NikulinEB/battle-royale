@@ -15,10 +15,18 @@ public class LivesComponent : MonoBehaviour
         }
         private set
         {
-            _lives = value;
-            if (_lives == 0)
+            if (value >= 0)
             {
-                Death();
+                _lives = value;
+
+                if (_lives == 0)
+                {
+                    Death();
+                }
+            }
+            else
+            {
+                _lives = 0;
             }
         }
     }
@@ -35,6 +43,11 @@ public class LivesComponent : MonoBehaviour
         if (collision.tag.Equals("Bullet"))
         {
             Lives--;
+            Destroy(collision.gameObject);
+        } else if (collision.tag.Equals("Player") || collision.tag.Equals("Enemy"))
+        {
+            collision.transform.GetComponent<LivesComponent>()?.Death();
+            this.Death();
         }
     }
 
@@ -49,5 +62,10 @@ public class LivesComponent : MonoBehaviour
     private void DestroyGameobject()
     {
         Destroy(gameObject);
+    }
+
+    public void ResetLives()
+    {
+        Lives = _livesCount;
     }
 }

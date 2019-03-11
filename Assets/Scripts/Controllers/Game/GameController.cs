@@ -29,4 +29,32 @@ public class GameController : MonoBehaviour
     static GameController() { }
 
     #endregion
+
+    private GameObject _player;
+
+    private void Awake()
+    {
+        Events.LevelStarted += CreatePlayer;
+    }
+
+    private void OnDestroy()
+    {
+        Events.LevelStarted -= CreatePlayer;
+    }
+
+    private void CreatePlayer()
+    {
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.RestartPlayer();
+        }
+        else
+        {
+            if (_player == null)
+            {
+                _player = Resources.Load<GameObject>("Player");
+            }
+            Instantiate(_player);
+        }
+    }
 }

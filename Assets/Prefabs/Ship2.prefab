@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1520125005}
   m_Layer: 8
   m_Name: Ship2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1510e0b2d6a4dfe4a80838879dcda66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shootingCooldown: 0.5
+  _shootingCooldown: 0.7
   _fireball: {fileID: 1877740161113332, guid: d17799e01588538449a360ded5bd038c, type: 3}
   _fireballSpawn: {fileID: 4096026760491290}
 --- !u!114 &1520125001
@@ -325,7 +325,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _visibleDistance: -12
   _rotationAngle: 0.7
-  _raycastStartPosition: {fileID: 4096026760491290}
 --- !u!114 &1520125005
 MonoBehaviour:
   m_ObjectHideFlags: 0

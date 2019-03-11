@@ -4,7 +4,34 @@ using System.Collections.Generic;
 
 public class EnemiesController : MonoBehaviour
 {
-    public int EnemiesCount { get; private set; }
+
+    #region Singleton
+
+    private static EnemiesController _instance;
+
+    public static EnemiesController Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<EnemiesController>();
+            }
+            if (_instance == null)
+            {
+                GameObject obj = new GameObject("EnemiesController");
+                _instance = obj.AddComponent<EnemiesController>();
+                Debug.Log("Could not locate an EnemiesController object. EnemiesController was generated Automatically.");
+            }
+            return _instance;
+        }
+    }
+
+    static EnemiesController() { }
+
+    #endregion
+
+    public int EnemiesCount { get { return _enemies.Count; } }
 
     [SerializeField]
     private GameObject _enemyPrefab;
@@ -16,7 +43,24 @@ public class EnemiesController : MonoBehaviour
 
     void Start()
     {
-        CreateEnemies();
+        Events.LevelStarted += RemoveAllEnemies;
+        Events.LevelStarted += CreateEnemies;
+    }
+
+    private void OnDestroy()
+    {
+        Events.LevelStarted -= RemoveAllEnemies;
+        Events.LevelStarted -= CreateEnemies;
+    }
+
+    private void RemoveAllEnemies()
+    {
+        foreach(var enemy in _enemies)
+        {
+            enemy.SetActive(false);
+            Destroy(enemy);
+        }
+        _enemies.Clear();
     }
 
     private void CreateEnemies()
@@ -38,12 +82,20 @@ public class EnemiesController : MonoBehaviour
 
     private void CreateEnemy(Vector3 position, Quaternion rotation)
     {
-        Instantiate(_enemyPrefab, position, rotation, transform);
+        _enemies.Add(Instantiate(_enemyPrefab, position, rotation, transform));
     }
 
     public void RemoveEnemy(GameObject enemy)
     {
         _enemies.Remove(enemy);
-        EnemiesCount--;
+        CheckGameEnd();
+    }
+
+    private void CheckGameEnd()
+    {
+        if (EnemiesCount == 0 && PlayerController.Instance?.Lives > 0)
+        {
+            Events.ShowMenu_Call(MenuType.Win);
+        }
     }
 }

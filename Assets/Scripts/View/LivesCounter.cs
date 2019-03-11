@@ -9,13 +9,24 @@ public class LivesCounter : MonoBehaviour
 
     void Start()
     {
-        _playerLives = FindObjectOfType<PlayerController>()?.GetComponent<LivesComponent>();
         _counter = GetComponent<Text>();
+        Events.LevelStarted += SetLivesComponent;
+    }
+
+    private void OnDestroy()
+    {
+        Events.LevelStarted -= SetLivesComponent;
+    }
+
+    private void SetLivesComponent()
+    {
+        _playerLives = PlayerController.Instance.GetComponent<LivesComponent>();
+
     }
 
     private void FixedUpdate()
     {
-        _counter.text = "Lives: " + _playerLives.Lives.ToString();
+        _counter.text = "Lives: " + _playerLives?.Lives.ToString();
     }
 
 }

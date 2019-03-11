@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -8,8 +9,6 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]
     [Tooltip("Rotation angle per fixed update.")]
     private float _rotationAngle;
-    [SerializeField]
-    private Transform _raycastStartPosition;
     private Transform _goal;
     private Coroutine _searching;
 
@@ -21,30 +20,47 @@ public class EnemyAI : MonoBehaviour
     private void OnDestroy()
     {
         StopCoroutine(_searching);
+        EnemiesController.Instance.RemoveEnemy(gameObject);
     }
 
     private IEnumerator GoalSearching()
     {
-        RaycastHit2D raycastHit;
+        Vector3 shipForward;
+        Vector3 toCenter;
+        RaycastHit2D raycastHit = new RaycastHit2D();
+        float rayDirection = -1;
         while (true)
         {
             yield return new WaitForFixedUpdate();
-            raycastHit = Physics2D.Raycast(_raycastStartPosition.position, transform.TransformDirection(0, 1, 0), distance : _visibleDistance, layerMask : LayerMask.GetMask("Ships"));
-            //Debug.Log("raycastHit " + raycastHit.collider?.name);
+            rayDirection = 0;
+            while (rayDirection < 360 && raycastHit.transform == null)
+            {
+                raycastHit = Physics2D.Raycast(transform.position, transform.TransformDirection((float)Math.Cos(rayDirection), (float)Math.Sin(rayDirection), 0), distance: _visibleDistance, layerMask: LayerMask.GetMask("Ships"));
+                //Debug.DrawRay(transform.position, transform.TransformDirection((float)Math.Cos(rayDirection), (float)Math.Sin(rayDirection), 0));
+                rayDirection += 5f;
+            }
+            shipForward = transform.TransformDirection(0, Mathf.Sign(_visibleDistance) * 1, 0);
+            toCenter = (Vector3.zero - transform.position).normalized;
             if (raycastHit.transform == null)
             {
-                Rotate();
+                if ((Math.Round(shipForward.x, 1) != Math.Round(toCenter.x, 1)) || (Math.Round(shipForward.y, 1) != Math.Round(toCenter.y, 1)))
+                {
+                    Rotate(shipForward, toCenter);
+                }
+            }
+            else
+            {
+                Rotate(shipForward, (raycastHit.transform.position - transform.position));
             }
         }
     }
 
-    private void Rotate()
+    private void Rotate(Vector3 from, Vector3 to)
     {
-        transform.Rotate(0, 0, _rotationAngle, Space.Self);
+        var vectorsAngle = Vector3.SignedAngle(from, to, new Vector3(0, 0, 1));
+        var angle = _rotationAngle * Math.Sign(vectorsAngle);
+        transform.Rotate(0, 0, angle, Space.Self);
     }
 
-    private void OnDrawGizmos()
-    {
-        Debug.DrawRay(transform.position, transform.TransformDirection(0, 1 * _visibleDistance, 0));
-    }
+
 }

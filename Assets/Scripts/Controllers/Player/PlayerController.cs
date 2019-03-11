@@ -15,12 +15,6 @@ public class PlayerController : MonoBehaviour
             {
                 _instance = FindObjectOfType<PlayerController>();
             }
-            if (_instance == null)
-            {
-                GameObject obj = new GameObject("PlayerController");
-                _instance = obj.AddComponent<PlayerController>();
-                Debug.Log("Could not locate an PlayerController object. PlayerController was generated Automatically.");
-            }
             return _instance;
         }
     }
@@ -29,9 +23,29 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    public int Lives { get { return _livesComponent.Lives; } }
+    private LivesComponent _livesComponent;
+
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
+
+    private void Start()
+    {
+        _livesComponent = GetComponent<LivesComponent>();
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
+    }
+
     private void OnDestroy()
     {
         Events.ShowMenu_Call(MenuType.Defeat);
+    }
+
+    public void RestartPlayer()
+    {
+        transform.position = _startPosition;
+        transform.rotation = _startRotation;
+        _livesComponent.ResetLives();
     }
 
 }
